@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#SBATCH --nodes=4
+#SBATCH --time=6:00:00
+
+#SBATCH --job-name=UiO
+#SBATCH --account=free
+
+#SBATCH --error=Std.e.%j
+#SBATCH --output=Std.o.%j
+
+#Note: select = No. Nodes (e.g. 12 = 12*24 = 288 cores)
+
+. /etc/profile.d/modules.sh
+module purge
+module load slurm
+
+module load openmpi/intel/1.8.4
+module load intel/mkl/64/11.2
+module load python/2.7.8 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/lib/lib
+export OMP_NUM_THREADS=1
+
+mpirun -np 64 gpaw-python relax.py
+
